@@ -4,7 +4,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { User } from '@auth0/auth0-react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 
 import { z } from "zod";
@@ -28,12 +28,17 @@ type Props = {
     buttonText?: string;
 };
 
-const UserProfileForm = ({
-    onSave, isLoading
-}: Props) => {
+const UserProfileForm = ({onSave, isLoading,currentUser}: Props) => {
     const form = useForm<UserFormData>({
-        resolver: zodResolver(formSchema)
+        resolver: zodResolver(formSchema),
+        defaultValues:currentUser,
     });
+
+    useEffect(() => {
+        form.reset(currentUser)
+     
+    }, [currentUser,form])
+    
     return (
         <Form {...form} >
         <form
